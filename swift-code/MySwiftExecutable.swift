@@ -1,6 +1,7 @@
 import UIKit
 
 class MalwareApp: UIApplicationMain {
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Request photo library access
         let photoLibraryAccessRequest = PHRequestAuthorizationOptions.usePhotoLibrary
